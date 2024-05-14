@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://bmsbbm1uljneq"]
+[gd_scene load_steps=8 format=3 uid="uid://bmsbbm1uljneq"]
 
 [ext_resource type="Script" path="res://Scenes/Environment.gd" id="1_8ux07"]
+[ext_resource type="Script" path="res://Scenes/Ascenseur.gd" id="2_cajmo"]
 [ext_resource type="PackedScene" uid="uid://d1ocoyywa2cx2" path="res://Scenes/Character.tscn" id="2_hplal"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_asyx6"]
@@ -9,13 +10,21 @@ size = Vector3(2, 0.0356849, 2)
 [sub_resource type="PlaneMesh" id="PlaneMesh_ckfwa"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pukn5"]
+size = Vector3(3, 1, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_40jkg"]
 
 [node name="Environment" type="Node3D"]
 script = ExtResource("1_8ux07")
 
-[node name="Sol" type="Area3D" parent="."]
+[node name="Sol" type="Area3D" parent="." node_paths=PackedStringArray("temps_trajet", "temps_etage", "timer_bouton")]
+script = ExtResource("2_cajmo")
+temps_trajet = NodePath("Temps_Trajet")
+temps_etage = NodePath("Temps_Etage")
+timer_bouton = NodePath("Timer_Bouton")
+
+[node name="Temps_Trajet" type="Timer" parent="Sol"]
+wait_time = 150.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Sol"]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, -1, 0)
@@ -25,13 +34,24 @@ shape = SubResource("BoxShape3D_asyx6")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -8.9407e-08, 0)
 mesh = SubResource("PlaneMesh_ckfwa")
 
+[node name="Temps_Etage" type="Timer" parent="Sol"]
+wait_time = 30.0
+
+[node name="Timer_Bouton" type="Timer" parent="Sol"]
+
 [node name="Character" parent="." instance=ExtResource("2_hplal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
 
 [node name="PlaceHolder" type="Area3D" parent="." groups=["Test"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlaceHolder"]
 shape = SubResource("BoxShape3D_pukn5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="PlaceHolder/CollisionShape3D"]
 mesh = SubResource("BoxMesh_40jkg")
+
+[connection signal="button_pressed" from="." to="Sol" method="_on_environment_button_pressed"]
+[connection signal="timeout" from="Sol/Temps_Etage" to="Sol" method="_timeOut_etage"]
+[connection signal="timeout" from="Sol/Timer_Bouton" to="Sol" method="timeOut_Timer_Boutton"]
+[connection signal="area_entered" from="PlaceHolder" to="Sol" method="_on_place_holder_area_entered"]

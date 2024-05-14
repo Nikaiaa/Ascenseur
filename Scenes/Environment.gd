@@ -5,6 +5,7 @@ var raycast
 var texture
 var cursor_hand = preload("res://UI/Cursor.png")
 var cursor_default = preload("res://UI/Cursor_Default.png") 
+signal button_pressed 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	character = $Character
@@ -16,9 +17,9 @@ func _physics_process(delta):
 		var collider = raycast.get_collider()
 		texture.texture = cursor_hand
 		if collider.is_in_group("Test"):
-			print("coucou") 
+			button_pressed.emit()
 		else:
-			print("au revoir")
+			pass
 	else: 
 		texture.texture = cursor_default
 		
