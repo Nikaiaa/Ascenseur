@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://d1ocoyywa2cx2"]
+
+[ext_resource type="Script" path="res://Scripts/CharacterBody3D.gd" id="1_y0jye"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_857tn"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_mlxy1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_edvby"]
+size = Vector3(2, 0.0356849, 2)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_uw6qk"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0163379, 0)
+script = ExtResource("1_y0jye")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("CapsuleShape3D_857tn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_mlxy1")
+
+[node name="Rotation" type="Node3D" parent="CharacterBody3D"]
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/Rotation"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.439906, 0)
+current = true
+
+[node name="RayCast3D" type="RayCast3D" parent="CharacterBody3D/Rotation/Camera3D"]
+collide_with_areas = true
+debug_shape_custom_color = Color(0.815686, 0, 0.207843, 1)
+debug_shape_thickness = 5
+
+[node name="Sol" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sol"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, -1, 0)
+shape = SubResource("BoxShape3D_edvby")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Sol/CollisionShape3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -8.9407e-08, 0)
+mesh = SubResource("PlaneMesh_uw6qk")
